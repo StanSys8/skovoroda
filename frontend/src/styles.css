@@ -414,6 +414,14 @@ a:hover { text-decoration: underline; }
 .notif .dot.info { color: var(--accent); }
 .notif .dot.success { color: var(--success); }
 .notif .dot.warning, .notif .dot.error { color: var(--error); }
+.notif .dot.security { color: var(--error); font-size: 14px; margin-top: 1px; }
+.notif.security {
+  border: 1.5px solid var(--error);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--error) 14%, transparent);
+}
+.notif.security .notif-body strong { color: var(--error); }
+.notif.security .notif-body p { white-space: pre-wrap; }
 .notif-body { flex: 1; }
 .notif-body strong { font-weight: 600; }
 .notif-body p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }

@@ -38,7 +38,12 @@ export interface Automation {
   updatedAt: string;
 }
 
-export type NotificationLevel = 'info' | 'success' | 'warning' | 'error';
+export type NotificationLevel =
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'security';
 
 export interface AppNotification {
   id: string;

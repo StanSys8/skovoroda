@@ -25,8 +25,15 @@ export default function NotificationsFeed(props: {
   return (
     <div>
       {items.map((n) => (
-        <div key={n.id} className={`notif ${n.read ? '' : 'unread'}`}>
-          <span className={`dot ${n.level}`}>●</span>
+        <div
+          key={n.id}
+          className={`notif ${n.read ? '' : 'unread'} ${
+            n.level === 'security' ? 'security' : ''
+          }`}
+        >
+          <span className={`dot ${n.level}`}>
+            {n.level === 'security' ? '⚠' : '●'}
+          </span>
           <div className="notif-body">
             <strong>{n.title}</strong>
             {n.body && <p>{n.body}</p>}

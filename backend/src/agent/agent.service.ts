@@ -82,6 +82,8 @@ export class AgentService {
     cmd.finishedAt = new Date();
     await this.repo.save(cmd);
 
+    await this.emitSecurityAlerts(cmd);
+
     await this.notifications.emit({
       title:
         dto.status === 'done' ? `Done: ${cmd.title}` : `Failed: ${cmd.title}`,
@@ -115,6 +117,34 @@ export class AgentService {
       level: 'info',
       source: 'system',
     });
+  }
+
+  /**
+   * The agent records prompt-injection attempts it encountered in
+   * details.securityIncidents (per agent/init.md). Each becomes its own
+   * red security alert in the feed: what the injected text tried to do,
+   * where it came from, and how the agent handled it.
+   */
+  private async emitSecurityAlerts(cmd: AgentCommand) {
+    const raw = cmd.resultDetails?.['securityIncidents'];
+    if (!Array.isArray(raw) || raw.length === 0) return;
+
+    const clip = (v: unknown, max = 400) =>
+      String(v ?? 'unknown').slice(0, max);
+
+    for (const inc of raw.slice(0, 10) as Record<string, unknown>[]) {
+      await this.notifications.emit({
+        title: `Security alert: prompt injection — ${cmd.title}`,
+        body:
+          `Attempted: ${clip(inc?.['intent'])}\n` +
+          `Source: ${clip(inc?.['source'])}\n` +
+          `Quote: "${clip(inc?.['quote'])}"\n` +
+          `Handling: ${clip(inc?.['action'], 200) || 'ignored, not executed'}`,
+        level: 'security',
+        source: 'agent',
+        projectId: cmd.projectId,
+      });
+    }
   }
 
   /**

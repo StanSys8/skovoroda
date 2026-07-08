@@ -4,7 +4,12 @@ import {
 } from 'typeorm';
 import { Project } from '../projects/project.entity';
 
-export type NotificationLevel = 'info' | 'success' | 'warning' | 'error';
+export type NotificationLevel =
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'security';
 
 @Entity('notifications')
 export class Notification {
