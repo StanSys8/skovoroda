@@ -140,7 +140,7 @@ export function useLang() {
 export function detectLang(): Lang {
   const saved = localStorage.getItem('skovoroda.lang');
   if (saved === 'en' || saved === 'uk') return saved;
-  return navigator.language.startsWith('uk') ? 'uk' : 'en';
+  return 'uk';
 }
 
 export function persistLang(lang: Lang) {
