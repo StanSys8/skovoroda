@@ -6,6 +6,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { SyncModule } from './sync/sync.module';
 import { AgentModule } from './agent/agent.module';
 import { AutomationsModule } from './automations/automations.module';
+import { InstructionsModule } from './instructions/instructions.module';
 import { AutomationModule } from './automations/automation-module.entity';
 import { AutomationInstance } from './automations/automation-instance.entity';
 import { RunLog } from './automations/run-log.entity';
@@ -32,6 +33,7 @@ import { RunLog } from './automations/run-log.entity';
     SyncModule,
     AgentModule,
     AutomationsModule,
+    InstructionsModule,
   ],
 })
 export class AppModule {}

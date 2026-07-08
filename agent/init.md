@@ -58,10 +58,15 @@ exit 0
 
 ### Step 3. Fetch the instruction
 
-Read the md instruction at `instructionUrl` (a local file — via cat,
-a URL — via curl). The instruction describes WHAT to do and HOW.
-The `payload` field carries configuration parameters to substitute
-into the instruction.
+Read the md instruction at `instructionUrl`:
+
+- starts with `/api/` — it is served by Skovoroda itself (an uploaded
+  instruction): `curl -s "${API%/api}<instructionUrl>"`;
+- a local file path — via cat;
+- a full URL — via curl.
+
+The instruction describes WHAT to do and HOW. The `payload` field carries
+configuration parameters to substitute into the instruction.
 
 ### Step 4. Check the risk level
 

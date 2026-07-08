@@ -106,6 +106,9 @@ skovoroda/
 | GET/POST | /api/automations[?projectId=] | routines: list / create |
 | PATCH/DELETE | /api/automations/:id | routines: update / delete |
 | POST | /api/automations/:id/run | run now (restarts a persistent lane) |
+| POST | /api/instructions | upload an md instruction ({filename, content}) |
+| GET | /api/instructions/template | instruction template (mandatory sections) |
+| GET | /api/instructions/:id | raw instruction markdown |
 | GET | /api/agent/poll[?lane=] | agent poll: 204 when empty, 200 + command |
 | POST | /api/agent/result | agent execution report |
 | POST | /api/agent/commands | enqueue a command manually |
@@ -114,7 +117,12 @@ skovoroda/
 ## Routines and lanes
 
 A routine (an `automation_instance`) is created from the project page: name,
-md instruction, risk level, and one of two checkboxes:
+an uploaded `.md` instruction, risk level, and one of two checkboxes.
+Instructions must contain the `## Goal`, `## Steps` and `## Report` sections
+(the upload is validated); grab the template at `/api/instructions/template`
+or `agent/instructions/template.md`. Uploaded files are stored in the
+database and served at `/api/instructions/<id>`, which is what the routine's
+`instructionUrl` points to. The checkboxes:
 
 - **Attach to the morning routine** — the sync button enqueues it into the
   `main` lane. Lanes are strictly sequential: the server does not hand out
@@ -273,6 +281,9 @@ skovoroda/
 | GET/POST | /api/automations[?projectId=] | рутини: список / створення |
 | PATCH/DELETE | /api/automations/:id | рутини: оновлення / видалення |
 | POST | /api/automations/:id/run | запустити зараз (перезапускає persistent-lane) |
+| POST | /api/instructions | завантажити md-інструкцію ({filename, content}) |
+| GET | /api/instructions/template | шаблон інструкції (обов'язкові секції) |
+| GET | /api/instructions/:id | сирий markdown інструкції |
 | GET | /api/agent/poll[?lane=] | пул агента: 204 якщо порожньо, 200 + наказ |
 | POST | /api/agent/result | звіт агента про виконання |
 | POST | /api/agent/commands | поставити наказ вручну |
@@ -281,7 +292,12 @@ skovoroda/
 ## Рутини та lane-и
 
 Рутина (`automation_instance`) створюється зі сторінки проекту: назва,
-md-інструкція, рівень ризику та одна з двох галочок:
+завантажений `.md`-файл інструкції, рівень ризику та одна з двох галочок.
+Інструкція мусить містити секції `## Goal`, `## Steps` і `## Report`
+(перевіряється при завантаженні); шаблон — за `/api/instructions/template`
+або в `agent/instructions/template.md`. Завантажені файли зберігаються
+в базі й віддаються за `/api/instructions/<id>` — саме туди вказує
+`instructionUrl` рутини. Галочки:
 
 - **Підв'язати до ранкової рутини** — кнопка синку ставить її в lane
   `main`. Lane-и строго послідовні: сервер не видає наступний наказ, поки

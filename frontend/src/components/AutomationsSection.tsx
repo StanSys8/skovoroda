@@ -10,11 +10,15 @@ export default function AutomationsSection(props: {
   const t = useT();
   const [items, setItems] = useState<Automation[]>([]);
   const [name, setName] = useState('');
-  const [instructionUrl, setInstructionUrl] = useState('');
+  const [file, setFile] = useState<{ name: string; content: string } | null>(
+    null,
+  );
+  const [fileKey, setFileKey] = useState(0);
   const [riskLevel, setRiskLevel] = useState<RiskLevel>('read');
   const [morningSync, setMorningSync] = useState(true);
   const [persistent, setPersistent] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(() => {
     api.automations.list(projectId).then(setItems).catch(() => setItems([]));
@@ -22,25 +26,43 @@ export default function AutomationsSection(props: {
 
   useEffect(load, [load]);
 
+  const pickFile = (f: File | undefined) => {
+    setError(null);
+    if (!f) {
+      setFile(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () =>
+      setFile({ name: f.name, content: String(reader.result ?? '') });
+    reader.readAsText(f);
+  };
+
   const create = async () => {
-    if (!name.trim() || !instructionUrl.trim() || busy) return;
+    if (!name.trim() || !file || busy) return;
     setBusy(true);
+    setError(null);
     try {
+      const uploaded = await api.instructions.upload(file.name, file.content);
       await api.automations.create({
         projectId,
         name: name.trim(),
-        instructionUrl: instructionUrl.trim(),
+        instructionUrl: uploaded.url,
         riskLevel,
         morningSync,
         persistent,
+        payload: { instructionName: uploaded.filename },
       });
       setName('');
-      setInstructionUrl('');
+      setFile(null);
+      setFileKey((k) => k + 1); // скидає <input type="file">
       setRiskLevel('read');
       setMorningSync(true);
       setPersistent(false);
       load();
       onChanged?.();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(false);
     }
@@ -66,12 +88,24 @@ export default function AutomationsSection(props: {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <input
-            className="grow"
-            placeholder={t('instructionUrl')}
-            value={instructionUrl}
-            onChange={(e) => setInstructionUrl(e.target.value)}
-          />
+          <label className="file-label grow">
+            <input
+              key={fileKey}
+              type="file"
+              accept=".md,text/markdown"
+              onChange={(e) => pickFile(e.target.files?.[0])}
+            />
+            <span className={file ? 'file-name' : 'file-placeholder'}>
+              {file ? file.name : t('instructionFile')}
+            </span>
+          </label>
+          <a
+            className="template-link"
+            href={api.instructions.templateUrl}
+            download="skovoroda-instruction-template.md"
+          >
+            {t('downloadTemplate')}
+          </a>
         </div>
         <div className="automation-form-row">
           <select
@@ -104,13 +138,11 @@ export default function AutomationsSection(props: {
             />
             {t('persistentRoutine')}
           </label>
-          <button
-            onClick={create}
-            disabled={busy || !name.trim() || !instructionUrl.trim()}
-          >
+          <button onClick={create} disabled={busy || !name.trim() || !file}>
             {t('createAutomation')}
           </button>
         </div>
+        {error && <div className="form-error">{error}</div>}
       </div>
 
       {items.length === 0 && <p className="empty">{t('noAutomations')}</p>}
@@ -124,7 +156,11 @@ export default function AutomationsSection(props: {
               </span>
             </div>
             <div className="automation-meta">
-              <code>{a.config.instructionUrl}</code>
+              <code>
+                {typeof a.config.instructionName === 'string'
+                  ? a.config.instructionName
+                  : a.config.instructionUrl}
+              </code>
               <span className="risk">{a.config.riskLevel ?? 'read'}</span>
             </div>
             {a.persistent && a.enabled && (

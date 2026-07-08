@@ -58,7 +58,15 @@ async function http<T>(url: string, init?: RequestInit): Promise<T> {
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`${res.status}: ${text || res.statusText}`);
+    let message = text || res.statusText;
+    try {
+      const body = JSON.parse(text);
+      if (typeof body.message === 'string') message = body.message;
+      else if (Array.isArray(body.message)) message = body.message.join('; ');
+    } catch {
+      // не JSON — лишаємо як є
+    }
+    throw new Error(message);
   }
   return res.json() as Promise<T>;
 }
@@ -115,6 +123,14 @@ export const api = {
         { method: 'POST' },
       ),
   },
+  instructions: {
+    upload: (filename: string, content: string) =>
+      http<{ id: string; filename: string; url: string }>(
+        '/api/instructions',
+        { method: 'POST', body: JSON.stringify({ filename, content }) },
+      ),
+    templateUrl: '/api/instructions/template',
+  },
   automations: {
     list: (projectId: string) =>
       http<Automation[]>(`/api/automations?projectId=${projectId}`),
@@ -125,6 +141,7 @@ export const api = {
       riskLevel?: RiskLevel;
       morningSync?: boolean;
       persistent?: boolean;
+      payload?: Record<string, unknown>;
     }) =>
       http<Automation>('/api/automations', {
         method: 'POST',

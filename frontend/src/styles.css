@@ -471,6 +471,36 @@ a:hover { text-decoration: underline; }
 }
 .automation-form input:focus,
 .automation-form select:focus { outline: none; border-color: var(--accent); }
+.automation-form .file-label {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 0;
+}
+.automation-form .file-label:hover { border-color: var(--accent); }
+.automation-form .file-label input[type='file'] { display: none; }
+.automation-form .file-placeholder { color: var(--muted); }
+.automation-form .file-name {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.automation-form .template-link {
+  font-size: 13px;
+  white-space: nowrap;
+  align-self: center;
+}
+.automation-form .form-error {
+  color: var(--error);
+  font-size: 13px;
+  padding: 2px 2px 0;
+}
 .automation-form .check {
   display: inline-flex;
   align-items: center;
