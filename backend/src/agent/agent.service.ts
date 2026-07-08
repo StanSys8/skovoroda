@@ -92,8 +92,29 @@ export class AgentService {
     });
 
     await this.reenqueuePersistent(cmd);
+    await this.announceDrainedMainLane(cmd);
 
     return cmd;
+  }
+
+  /**
+   * The morning sync only announces the start; the real "finished" moment
+   * is when the last main-lane command gets reported and the lane drains.
+   */
+  private async announceDrainedMainLane(cmd: AgentCommand) {
+    if (cmd.lane !== 'main') return;
+    const remaining = await this.repo.countBy({
+      lane: 'main',
+      status: In(['pending', 'taken']),
+    });
+    if (remaining > 0) return;
+
+    await this.notifications.emit({
+      title: 'Morning routines finished',
+      body: 'All queued commands are done. The agent is back to waiting.',
+      level: 'info',
+      source: 'system',
+    });
   }
 
   /**

@@ -62,8 +62,13 @@ export class SyncService {
       enqueued++;
     }
 
+    // "Finished" is emitted by AgentService when the last main-lane
+    // command is reported — here we only announce the start.
     await this.notifications.emit({
-      title: 'Morning sync completed',
+      title:
+        enqueued > 0 || skipped > 0
+          ? 'Morning sync started'
+          : 'Morning sync: nothing to do',
       body:
         enqueued > 0 || skipped > 0
           ? `Commands enqueued for the agent: ${enqueued}.` +

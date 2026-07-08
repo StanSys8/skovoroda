@@ -70,6 +70,15 @@ function Shell(props: { theme: Theme; onToggleTheme: () => void }) {
     reload();
   }, [reload, refreshKey]);
 
+  // Агент звітує у фоні — підтягуємо лічильники та стрічку без F5.
+  // Тік пропускається, поки вкладка не на виду.
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (!document.hidden) setRefreshKey((k) => k + 1);
+    }, 10_000);
+    return () => clearInterval(id);
+  }, []);
+
   const runSync = async () => {
     setSyncing(true);
     try {
@@ -124,6 +133,7 @@ function Shell(props: { theme: Theme; onToggleTheme: () => void }) {
       {selected ? (
         <ProjectPage
           project={selected}
+          refreshKey={refreshKey}
           onBack={() => {
             setSelectedId(null);
             setRefreshKey((k) => k + 1);

@@ -6,6 +6,7 @@ import AutomationsSection from './AutomationsSection';
 
 export default function ProjectPage(props: {
   project: Project;
+  refreshKey?: number;
   onBack: () => void;
   onChanged?: () => void;
 }) {
@@ -141,7 +142,7 @@ export default function ProjectPage(props: {
       </div>
       <NotificationsFeed
         projectId={project.id}
-        refreshKey={refreshKey}
+        refreshKey={refreshKey + (props.refreshKey ?? 0)}
         onChanged={() => setRefreshKey((k) => k + 1)}
       />
     </>
