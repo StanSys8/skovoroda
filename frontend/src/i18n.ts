@@ -59,6 +59,14 @@ const dict = {
     badgeDisabled: 'disabled',
     persistentLaneHint: 'Agent session lane:',
     confirmDeleteAutomation: 'Delete this routine?',
+    aboutAuthor: 'about',
+    aboutTitle: 'About the author',
+    aboutText:
+      'My name is Stanislav Sysoiev. Skovoroda is my pet project: ' +
+      'lightweight, near-zero-cost automation of routine work via local ' +
+      'LLM agent sessions. If it proves useful to you — reach out, ' +
+      'I would love the feedback.',
+    comingSoon: 'soon',
   },
   uk: {
     tagline: 'Світ ловив мене, та не спіймав.',
@@ -116,6 +124,14 @@ const dict = {
     badgeDisabled: 'вимкнена',
     persistentLaneHint: 'Lane сесії агента:',
     confirmDeleteAutomation: 'Видалити цю рутину?',
+    aboutAuthor: 'про автора',
+    aboutTitle: 'Про автора',
+    aboutText:
+      'Мене звати Станіслав Сисоєв. Skovoroda — мій пет-проєкт: легка ' +
+      'і майже безкоштовна автоматизація рутини через локальні сесії ' +
+      'LLM-агентів. Якщо проєкт став вам у пригоді — напишіть, буду ' +
+      'радий фідбеку.',
+    comingSoon: 'скоро',
   },
 } as const;
 

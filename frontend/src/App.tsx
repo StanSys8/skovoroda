@@ -6,6 +6,7 @@ import {
 import { applyTheme, detectTheme, Theme } from './theme';
 import Dashboard from './components/Dashboard';
 import ProjectPage from './components/ProjectPage';
+import AboutPage from './components/AboutPage';
 
 function LangToggle() {
   const { lang, setLang } = useLang();
@@ -45,6 +46,7 @@ function Shell(props: { theme: Theme; onToggleTheme: () => void }) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [unread, setUnread] = useState<Record<string, number>>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showAbout, setShowAbout] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [available, setAvailable] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -96,7 +98,13 @@ function Shell(props: { theme: Theme; onToggleTheme: () => void }) {
   return (
     <div className="app">
       <header className="header">
-        <div className="brand" onClick={() => setSelectedId(null)}>
+        <div
+          className="brand"
+          onClick={() => {
+            setSelectedId(null);
+            setShowAbout(false);
+          }}
+        >
           <img
             className="portrait"
             src="/skovoroda.webp"
@@ -108,6 +116,15 @@ function Shell(props: { theme: Theme; onToggleTheme: () => void }) {
           </div>
         </div>
         <div className="header-actions">
+          <button
+            className="link-btn about-link"
+            onClick={() => {
+              setShowAbout(true);
+              setSelectedId(null);
+            }}
+          >
+            {t('aboutAuthor')}
+          </button>
           <LangToggle />
           <ThemeToggle theme={props.theme} onToggle={props.onToggleTheme} />
           <span className="tooltip-wrap">
@@ -130,7 +147,9 @@ function Shell(props: { theme: Theme; onToggleTheme: () => void }) {
 
       {error && <div className="error-banner">{error}</div>}
 
-      {selected ? (
+      {showAbout ? (
+        <AboutPage onBack={() => setShowAbout(false)} />
+      ) : selected ? (
         <ProjectPage
           project={selected}
           refreshKey={refreshKey}

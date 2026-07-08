@@ -195,6 +195,66 @@ a:hover { text-decoration: underline; }
   .sync-btn.running .sun { animation: none; }
 }
 
+/* ---------- About the author ---------- */
+.about-link { white-space: nowrap; }
+.about-card {
+  max-width: 560px;
+  margin: 24px auto 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px 32px;
+}
+.about-card h1 {
+  font-family: var(--font-display);
+  margin: 0 0 12px;
+  font-size: 26px;
+}
+.about-text { color: var(--text); margin: 0 0 22px; }
+.about-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.about-linkedin {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.about-linkedin:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  text-decoration: none;
+}
+.about-bmc {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-weight: 600;
+  cursor: not-allowed;
+}
+.about-bmc .soon {
+  font-size: 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 1px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* ---------- Tooltip ---------- */
 .tooltip-wrap { position: relative; display: inline-flex; }
 .tooltip {
