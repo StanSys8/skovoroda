@@ -1,0 +1,146 @@
+import { createContext, useCallback, useContext } from 'react';
+
+export type Lang = 'en' | 'uk';
+
+const dict = {
+  en: {
+    tagline: 'The world tried to catch me, but never could.',
+    sync: 'Morning sync',
+    syncing: 'Syncing…',
+    syncTooltip: 'Runs all available routines one by one',
+    syncNoRoutines: 'No routines available yet — nothing to run',
+    backendDown: 'Backend unreachable. Check that docker compose is running.',
+    syncFailed: 'Sync failed. Check the backend.',
+    notifications: 'Notifications',
+    projectNotifications: 'Project notifications',
+    markAllRead: 'mark all read',
+    markRead: 'read',
+    noNotifications: 'Silence. No news — which is news too.',
+    backToProjects: '← all projects',
+    notes: 'Notes',
+    notePlaceholder: 'What must not be forgotten about this project…',
+    add: 'Add',
+    noNotes: 'Empty so far. Write down the first thought.',
+    save: 'save',
+    cancel: 'cancel',
+    edit: 'edit',
+    delete: 'delete',
+    pin: 'Pin',
+    unpin: 'Unpin',
+    repository: 'repository',
+    production: 'production',
+    updated: 'updated',
+    statusActive: 'active',
+    statusPaused: 'paused',
+    statusArchived: 'archived',
+    emptyDashboard: 'No projects yet. Create the first one.',
+    newProjectName: 'Project name',
+    newProjectDescription: 'Short description (optional)',
+    createProject: 'Create project',
+    switchToLight: 'Switch to light theme (noon)',
+    switchToDark: 'Switch to dark theme (pre-dawn)',
+    automations: 'Automations',
+    noAutomations: 'No routines yet. Create the first one.',
+    automationName: 'Routine name',
+    instructionUrl: 'Instruction (md file path or URL)',
+    riskRead: 'read — read only',
+    riskWrite: 'write — mutates local data',
+    riskExternal: 'external — sends data outside',
+    attachMorning: 'Attach to the morning routine',
+    persistentRoutine: 'Persistent routine (dedicated agent session)',
+    createAutomation: 'Create routine',
+    runNow: 'run now',
+    enable: 'enable',
+    disable: 'disable',
+    badgeMorning: 'morning sync',
+    badgePersistent: 'persistent',
+    badgeManual: 'manual',
+    badgeDisabled: 'disabled',
+    persistentLaneHint: 'Agent session lane:',
+    confirmDeleteAutomation: 'Delete this routine?',
+  },
+  uk: {
+    tagline: 'Світ ловив мене, та не спіймав.',
+    sync: 'Ранковий синк',
+    syncing: 'Синхронізую…',
+    syncTooltip: 'Запускає всі доступні рутини по черзі',
+    syncNoRoutines: 'Немає доступних рутин — нічого запускати',
+    backendDown: 'Бекенд недоступний. Перевір, чи запущено docker compose.',
+    syncFailed: 'Синк не вдався. Перевір бекенд.',
+    notifications: 'Нотифікації',
+    projectNotifications: 'Нотифікації проекту',
+    markAllRead: 'прочитати всі',
+    markRead: 'прочитано',
+    noNotifications: 'Тиша. Жодних новин — і це теж новина.',
+    backToProjects: '← до всіх проектів',
+    notes: 'Нотатки',
+    notePlaceholder: 'Що не можна забути про цей проект…',
+    add: 'Додати',
+    noNotes: 'Поки порожньо. Запиши першу думку.',
+    save: 'зберегти',
+    cancel: 'скасувати',
+    edit: 'редагувати',
+    delete: 'видалити',
+    pin: 'Закріпити',
+    unpin: 'Відкріпити',
+    repository: 'репозиторій',
+    production: 'продакшн',
+    updated: 'оновлено',
+    statusActive: 'активний',
+    statusPaused: 'на паузі',
+    statusArchived: 'архів',
+    emptyDashboard: 'Проектів ще немає. Створи перший.',
+    newProjectName: 'Назва проекту',
+    newProjectDescription: 'Короткий опис (необов’язково)',
+    createProject: 'Створити проект',
+    switchToLight: 'Перемкнути на світлу тему (полудень)',
+    switchToDark: 'Перемкнути на темну тему (передсвітанок)',
+    automations: 'Автоматизації',
+    noAutomations: 'Рутин ще немає. Створи першу.',
+    automationName: 'Назва рутини',
+    instructionUrl: 'Інструкція (шлях до md-файлу або URL)',
+    riskRead: 'read — лише читання',
+    riskWrite: 'write — змінює локальні дані',
+    riskExternal: 'external — відправляє дані назовні',
+    attachMorning: 'Підв’язати до ранкової рутини',
+    persistentRoutine: 'Постійна рутина (окрема сесія агента)',
+    createAutomation: 'Створити рутину',
+    runNow: 'запустити',
+    enable: 'увімкнути',
+    disable: 'вимкнути',
+    badgeMorning: 'ранковий синк',
+    badgePersistent: 'постійна',
+    badgeManual: 'вручну',
+    badgeDisabled: 'вимкнена',
+    persistentLaneHint: 'Lane сесії агента:',
+    confirmDeleteAutomation: 'Видалити цю рутину?',
+  },
+} as const;
+
+export type TKey = keyof (typeof dict)['en'];
+
+export const LangContext = createContext<{
+  lang: Lang;
+  setLang: (l: Lang) => void;
+}>({ lang: 'en', setLang: () => {} });
+
+export function useT() {
+  const { lang } = useContext(LangContext);
+  // Stable per language: components hang effects off `t` (e.g. App's
+  // reload), so a fresh function every render would refetch in a loop.
+  return useCallback((key: TKey) => dict[lang][key], [lang]);
+}
+
+export function useLang() {
+  return useContext(LangContext);
+}
+
+export function detectLang(): Lang {
+  const saved = localStorage.getItem('skovoroda.lang');
+  if (saved === 'en' || saved === 'uk') return saved;
+  return navigator.language.startsWith('uk') ? 'uk' : 'en';
+}
+
+export function persistLang(lang: Lang) {
+  localStorage.setItem('skovoroda.lang', lang);
+}
