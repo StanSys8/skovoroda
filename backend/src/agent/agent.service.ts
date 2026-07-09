@@ -59,10 +59,13 @@ export class AgentService {
       const busy = await repo.countBy({ lane, status: 'taken' });
       if (busy > 0) return null;
 
-      const cmd = await repo.findOne({
-        where: { lane, status: 'pending' },
-        order: { createdAt: 'ASC' },
-      });
+      const cmd = await repo
+        .createQueryBuilder('c')
+        .where('c.lane = :lane', { lane })
+        .andWhere("c.status = 'pending'")
+        .andWhere('(c."availableAt" IS NULL OR c."availableAt" <= now())')
+        .orderBy('c.createdAt', 'ASC')
+        .getOne();
       if (!cmd) return null;
 
       cmd.status = 'taken';
@@ -160,8 +163,16 @@ export class AgentService {
     });
     if (!inst || !inst.persistent || !inst.enabled) return;
 
-    const next = commandFromInstance(inst);
-    if (next) await this.enqueue(next);
+    const dto = commandFromInstance(inst);
+    if (!dto) return;
+
+    const next = this.repo.create(dto);
+    // Throttle: hold the next run until the interval passes. While it waits,
+    // poll returns 204 and the agent sleeps — no tokens burned.
+    if (inst.intervalMinutes > 0) {
+      next.availableAt = new Date(Date.now() + inst.intervalMinutes * 60_000);
+    }
+    await this.repo.save(next);
   }
 
   /**

@@ -578,6 +578,17 @@ a:hover { text-decoration: underline; }
   cursor: pointer;
 }
 .automation-form .check input { accent-color: var(--accent); }
+.automation-form .interval {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.automation-form .interval input {
+  width: 64px;
+  padding: 7px 8px;
+}
 .automation-form button {
   background: var(--surface);
   border: 1px solid var(--accent);

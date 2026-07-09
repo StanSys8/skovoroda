@@ -47,6 +47,7 @@ export class AutomationsController {
     const inst = await this.service.findOne(id);
     return buildInitMarkdown({
       lane: instanceLane(inst),
+      intervalMinutes: inst.intervalMinutes,
       routine: {
         name: inst.name || 'Automation',
         instructionUrl: String(inst.config?.['instructionUrl'] ?? ''),

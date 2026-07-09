@@ -14,9 +14,11 @@ export const AGENT_API_BASE =
 
 export function buildInitMarkdown(opts: {
   lane: string;
+  intervalMinutes?: number;
   routine?: { name: string; instructionUrl: string };
 }): string {
   const { lane, routine } = opts;
+  const intervalMinutes = opts.intervalMinutes ?? 0;
   const origin = AGENT_API_BASE.replace(/\/api\/?$/, '');
 
   const header = routine
@@ -29,7 +31,9 @@ fresh agent session (e.g. Claude Code). It already knows its lane and API
 - Routine: ${routine.name}
 - Lane: \`${lane}\`${
         lane.startsWith('inst:')
-          ? ' (persistent — the backend re-arms the next run after every report)'
+          ? intervalMinutes > 0
+            ? ` (persistent — re-armed every ${intervalMinutes} min)`
+            : ' (persistent — re-armed immediately after every report)'
           : ''
       }
 - Instruction it will receive: ${origin}${routine.instructionUrl}
@@ -124,9 +128,17 @@ Restart the wait loop immediately — a silent restart, no commentary.${
 
 > **Persistent routine.** After you report, the backend queues the next
 > run into this same lane, so the loop keeps it alive until the routine
-> is disabled in the UI. If the instruction finishes quickly, pace
-> yourself as the instruction says (e.g. observe for a while before
-> reporting) — otherwise you will spin non-stop and burn tokens.`
+> is disabled in the UI.${
+          intervalMinutes > 0
+            ? ` The backend also enforces a **${intervalMinutes}-minute** gap
+> between runs: right after you report, poll simply returns 204 until the
+> interval passes, so your bash loop just keeps sleeping — no tokens
+> burned, no self-pacing needed.`
+            : ` There is no interval configured, so the next run is served
+> the moment you report. If the instruction finishes quickly, pace
+> yourself (e.g. observe for a while before reporting) or set an interval
+> on the routine — otherwise you will spin non-stop and burn tokens.`
+        }`
       : ''
   }
 

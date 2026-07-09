@@ -29,6 +29,7 @@ export interface Automation {
   enabled: boolean;
   morningSync: boolean;
   persistent: boolean;
+  intervalMinutes: number;
   config: { instructionUrl?: string; riskLevel?: RiskLevel } & Record<
     string,
     unknown
@@ -157,6 +158,7 @@ export const api = {
       riskLevel?: RiskLevel;
       morningSync?: boolean;
       persistent?: boolean;
+      intervalMinutes?: number;
       payload?: Record<string, unknown>;
     }) =>
       http<Automation>('/api/automations', {
@@ -171,6 +173,7 @@ export const api = {
         riskLevel: RiskLevel;
         morningSync: boolean;
         persistent: boolean;
+        intervalMinutes: number;
         enabled: boolean;
       }>,
     ) =>

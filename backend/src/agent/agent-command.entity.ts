@@ -73,6 +73,14 @@ export class AgentCommand {
   @CreateDateColumn()
   createdAt: Date;
 
+  /**
+   * Earliest time this command may be handed out. Used to throttle
+   * persistent routines: the next run is queued but not served until
+   * the interval passes. null = available immediately.
+   */
+  @Column({ type: 'timestamptz', nullable: true })
+  availableAt: Date | null;
+
   @Column({ type: 'timestamptz', nullable: true })
   takenAt: Date | null;
 

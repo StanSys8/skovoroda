@@ -1,5 +1,6 @@
 import {
-  IsBoolean, IsIn, IsObject, IsOptional, IsString, IsUUID, MinLength,
+  IsBoolean, IsIn, IsInt, IsObject, IsOptional, IsString, IsUUID, Max, Min,
+  MinLength,
 } from 'class-validator';
 
 export class CreateAutomationDto {
@@ -32,6 +33,12 @@ export class CreateAutomationDto {
   persistent?: boolean;
 
   @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(10_080)
+  intervalMinutes?: number;
+
+  @IsOptional()
   @IsBoolean()
   enabled?: boolean;
 }
@@ -62,6 +69,12 @@ export class UpdateAutomationDto {
   @IsOptional()
   @IsBoolean()
   persistent?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(10_080)
+  intervalMinutes?: number;
 
   @IsOptional()
   @IsBoolean()

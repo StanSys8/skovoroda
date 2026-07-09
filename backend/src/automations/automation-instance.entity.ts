@@ -51,6 +51,13 @@ export class AutomationInstance {
   @Column({ default: false })
   persistent: boolean;
 
+  /**
+   * Minutes the backend waits before re-arming a persistent routine's next
+   * run. 0 = re-arm immediately. Ignored for non-persistent routines.
+   */
+  @Column({ type: 'int', default: 0 })
+  intervalMinutes: number;
+
   /** Parameter values conforming to the module's configSchema. */
   @Column({ type: 'jsonb', default: {} })
   config: Record<string, unknown>;

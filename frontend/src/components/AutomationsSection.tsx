@@ -17,6 +17,7 @@ export default function AutomationsSection(props: {
   const [riskLevel, setRiskLevel] = useState<RiskLevel>('read');
   const [morningSync, setMorningSync] = useState(true);
   const [persistent, setPersistent] = useState(false);
+  const [intervalMinutes, setIntervalMinutes] = useState(5);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,6 +52,7 @@ export default function AutomationsSection(props: {
         riskLevel,
         morningSync,
         persistent,
+        intervalMinutes: persistent ? intervalMinutes : 0,
         payload: { instructionName: uploaded.filename },
       });
       setName('');
@@ -59,6 +61,7 @@ export default function AutomationsSection(props: {
       setRiskLevel('read');
       setMorningSync(true);
       setPersistent(false);
+      setIntervalMinutes(5);
       load();
       onChanged?.();
     } catch (e) {
@@ -138,6 +141,21 @@ export default function AutomationsSection(props: {
             />
             {t('persistentRoutine')}
           </label>
+          {persistent && (
+            <label className="interval" title={t('intervalHint')}>
+              {t('intervalLabel')}
+              <input
+                type="number"
+                min={0}
+                max={10080}
+                value={intervalMinutes}
+                onChange={(e) =>
+                  setIntervalMinutes(Math.max(0, Number(e.target.value) || 0))
+                }
+              />
+              {t('intervalMinutes')}
+            </label>
+          )}
           <button onClick={create} disabled={busy || !name.trim() || !file}>
             {t('createAutomation')}
           </button>
@@ -162,6 +180,13 @@ export default function AutomationsSection(props: {
                   : a.config.instructionUrl}
               </code>
               <span className="risk">{a.config.riskLevel ?? 'read'}</span>
+              {a.persistent && (
+                <span className="badge">
+                  {a.intervalMinutes > 0
+                    ? t('everyMinutes').replace('{n}', String(a.intervalMinutes))
+                    : t('intervalHint')}
+                </span>
+              )}
             </div>
             {a.persistent && a.enabled && (
               <div className="automation-lane">

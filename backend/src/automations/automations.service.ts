@@ -45,6 +45,7 @@ export class AutomationsService {
         name: dto.name,
         morningSync: dto.morningSync ?? false,
         persistent: dto.persistent ?? false,
+        intervalMinutes: dto.intervalMinutes ?? 0,
         enabled: dto.enabled ?? true,
         config: {
           ...(dto.payload ?? {}),
@@ -68,6 +69,9 @@ export class AutomationsService {
     if (dto.name !== undefined) inst.name = dto.name;
     if (dto.morningSync !== undefined) inst.morningSync = dto.morningSync;
     if (dto.persistent !== undefined) inst.persistent = dto.persistent;
+    if (dto.intervalMinutes !== undefined) {
+      inst.intervalMinutes = dto.intervalMinutes;
+    }
     if (dto.enabled !== undefined) inst.enabled = dto.enabled;
     if (inst.morningSync && inst.persistent) {
       throw new BadRequestException(
