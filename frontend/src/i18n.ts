@@ -66,7 +66,6 @@ const dict = {
       'lightweight, near-zero-cost automation of routine work via local ' +
       'LLM agent sessions. If it proves useful to you — reach out, ' +
       'I would love the feedback.',
-    comingSoon: 'soon',
   },
   uk: {
     tagline: 'Світ ловив мене, та не спіймав.',
@@ -131,7 +130,6 @@ const dict = {
       'і майже безкоштовна автоматизація рутини через локальні сесії ' +
       'LLM-агентів. Якщо проєкт став вам у пригоді — напишіть, буду ' +
       'радий фідбеку.',
-    comingSoon: 'скоро',
   },
 } as const;
 

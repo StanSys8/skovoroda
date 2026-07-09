@@ -238,21 +238,17 @@ a:hover { text-decoration: underline; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: none;
-  border: 1px dashed var(--line);
-  color: var(--muted);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: var(--on-accent);
   border-radius: 8px;
   padding: 9px 16px;
   font-weight: 600;
-  cursor: not-allowed;
+  text-decoration: none;
 }
-.about-bmc .soon {
-  font-size: 11px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 1px 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.about-bmc:hover {
+  text-decoration: none;
+  box-shadow: 0 0 18px 1px rgba(224, 164, 88, 0.35);
 }
 
 /* ---------- Tooltip ---------- */

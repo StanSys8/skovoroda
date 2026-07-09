@@ -1,6 +1,7 @@
 import { useT } from '../i18n';
 
 const LINKEDIN_URL = 'https://www.linkedin.com/in/stanislav-sysoiev/';
+const BMC_URL = 'https://buymeacoffee.com/stanislav.s';
 
 export default function AboutPage(props: { onBack: () => void }) {
   const t = useT();
@@ -22,11 +23,14 @@ export default function AboutPage(props: { onBack: () => void }) {
           >
             in&nbsp;·&nbsp;LinkedIn — Stanislav Sysoiev
           </a>
-          {/* Заглушка: підключимо справжню сторінку Buy Me a Coffee пізніше */}
-          <button className="about-bmc" disabled title={t('comingSoon')}>
+          <a
+            className="about-bmc"
+            href={BMC_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
             ☕ Buy me a coffee
-            <span className="soon">{t('comingSoon')}</span>
-          </button>
+          </a>
         </div>
       </div>
     </>
