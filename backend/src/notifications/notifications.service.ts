@@ -61,4 +61,18 @@ export class NotificationsService {
     await qb.execute();
     return { ok: true };
   }
+
+  async remove(id: string) {
+    const res = await this.repo.delete({ id });
+    if (!res.affected) throw new NotFoundException('Notification not found');
+    return { deleted: true };
+  }
+
+  /** Clear the feed. Scoped to a project when projectId is given. */
+  async clear(projectId?: string) {
+    const qb = this.repo.createQueryBuilder().delete();
+    if (projectId) qb.where('"projectId" = :projectId', { projectId });
+    const res = await qb.execute();
+    return { deleted: res.affected ?? 0 };
+  }
 }

@@ -441,6 +441,10 @@ a:hover { text-decoration: underline; }
   padding: 0;
 }
 .link-btn:hover { color: var(--accent); }
+.link-btn.danger:hover { color: var(--error); }
+
+.notif-delete { padding: 2px 7px; line-height: 1; }
+.notif-delete:hover { border-color: var(--error) !important; color: var(--error) !important; }
 
 /* ---------- Project page ---------- */
 .back {

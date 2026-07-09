@@ -139,6 +139,16 @@ export default function ProjectPage(props: {
         >
           {t('markAllRead')}
         </button>
+        <button
+          className="link-btn danger"
+          onClick={async () => {
+            if (!window.confirm(t('confirmClearNotifications'))) return;
+            await api.notifications.clear(project.id);
+            setRefreshKey((k) => k + 1);
+          }}
+        >
+          {t('clearAll')}
+        </button>
       </div>
       <NotificationsFeed
         projectId={project.id}

@@ -91,6 +91,16 @@ export default function Dashboard(props: {
         >
           {t('markAllRead')}
         </button>
+        <button
+          className="link-btn danger"
+          onClick={async () => {
+            if (!window.confirm(t('confirmClearNotifications'))) return;
+            await api.notifications.clear();
+            onChanged();
+          }}
+        >
+          {t('clearAll')}
+        </button>
       </div>
       <NotificationsFeed refreshKey={refreshKey} onChanged={onChanged} />
     </>

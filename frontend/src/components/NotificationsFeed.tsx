@@ -56,6 +56,17 @@ export default function NotificationsFeed(props: {
               {t('markRead')}
             </button>
           )}
+          <button
+            className="notif-delete"
+            aria-label={t('deleteNotification')}
+            title={t('deleteNotification')}
+            onClick={async () => {
+              await api.notifications.remove(n.id);
+              onChanged();
+            }}
+          >
+            ✕
+          </button>
         </div>
       ))}
     </div>

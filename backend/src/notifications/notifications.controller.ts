@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query,
+  Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query,
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 
@@ -31,5 +31,15 @@ export class NotificationsController {
   @Post('read-all')
   markAllRead(@Query('projectId') projectId?: string) {
     return this.service.markAllRead(projectId || undefined);
+  }
+
+  @Post('clear')
+  clear(@Query('projectId') projectId?: string) {
+    return this.service.clear(projectId || undefined);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.service.remove(id);
   }
 }

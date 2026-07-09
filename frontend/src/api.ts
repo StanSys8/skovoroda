@@ -127,6 +127,17 @@ export const api = {
           : '/api/notifications/read-all',
         { method: 'POST' },
       ),
+    remove: (id: string) =>
+      http<{ deleted: boolean }>(`/api/notifications/${id}`, {
+        method: 'DELETE',
+      }),
+    clear: (projectId?: string) =>
+      http<{ deleted: number }>(
+        projectId
+          ? `/api/notifications/clear?projectId=${projectId}`
+          : '/api/notifications/clear',
+        { method: 'POST' },
+      ),
   },
   instructions: {
     upload: (filename: string, content: string) =>
