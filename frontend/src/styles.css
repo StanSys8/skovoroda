@@ -251,6 +251,90 @@ a:hover { text-decoration: underline; }
   box-shadow: 0 0 18px 1px rgba(224, 164, 88, 0.35);
 }
 
+/* ---------- Danger zone & delete modal ---------- */
+.section-title.danger-title { color: var(--error); }
+.danger-zone {
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.danger-zone p { margin: 0; color: var(--muted); font-size: 13.5px; }
+
+.btn-danger {
+  background: var(--error);
+  color: #fff;
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.btn-danger:hover:not(:disabled) { filter: brightness(1.08); }
+.btn-danger:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-secondary {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+.btn-secondary:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+.modal.danger { border-top: 3px solid var(--error); }
+.modal h2 {
+  font-family: var(--font-display);
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+.modal-warning { color: var(--muted); margin: 0 0 14px; font-size: 14px; }
+.modal-prompt { margin: 0 0 8px; font-size: 14px; }
+.modal-prompt code {
+  background: var(--bg);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-weight: 600;
+}
+.modal input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 9px 12px;
+}
+.modal input:focus { outline: none; border-color: var(--error); }
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
 /* ---------- Tooltip ---------- */
 .tooltip-wrap { position: relative; display: inline-flex; }
 .tooltip {

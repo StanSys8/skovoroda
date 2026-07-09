@@ -3,20 +3,23 @@ import { api, Note, Project } from '../api';
 import { useT } from '../i18n';
 import NotificationsFeed from './NotificationsFeed';
 import AutomationsSection from './AutomationsSection';
+import DeleteProjectModal from './DeleteProjectModal';
 
 export default function ProjectPage(props: {
   project: Project;
   refreshKey?: number;
   onBack: () => void;
   onChanged?: () => void;
+  onDeleted?: () => void;
 }) {
-  const { project, onBack, onChanged } = props;
+  const { project, onBack, onChanged, onDeleted } = props;
   const t = useT();
   const [notes, setNotes] = useState<Note[]>([]);
   const [draft, setDraft] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const loadNotes = useCallback(() => {
     api.notes.list(project.id).then(setNotes).catch(() => setNotes([]));
@@ -155,6 +158,28 @@ export default function ProjectPage(props: {
         refreshKey={refreshKey + (props.refreshKey ?? 0)}
         onChanged={() => setRefreshKey((k) => k + 1)}
       />
+
+      <div className="section-title danger-title">
+        {t('dangerZone')} <span className="rule" />
+      </div>
+      <div className="danger-zone">
+        <p>{t('deleteProjectWarning')}</p>
+        <button className="btn-danger" onClick={() => setConfirmingDelete(true)}>
+          {t('deleteProject')}
+        </button>
+      </div>
+
+      {confirmingDelete && (
+        <DeleteProjectModal
+          projectName={project.name}
+          onCancel={() => setConfirmingDelete(false)}
+          onConfirm={async () => {
+            await api.projects.remove(project.id);
+            setConfirmingDelete(false);
+            (onDeleted ?? onBack)();
+          }}
+        />
+      )}
     </>
   );
 }

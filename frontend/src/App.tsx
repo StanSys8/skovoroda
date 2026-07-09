@@ -158,6 +158,10 @@ function Shell(props: { theme: Theme; onToggleTheme: () => void }) {
             setRefreshKey((k) => k + 1);
           }}
           onChanged={() => setRefreshKey((k) => k + 1)}
+          onDeleted={() => {
+            setSelectedId(null);
+            setRefreshKey((k) => k + 1);
+          }}
         />
       ) : (
         <Dashboard

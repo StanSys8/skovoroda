@@ -20,6 +20,14 @@ const dict = {
     confirmClearNotifications: 'Delete all notifications shown here?',
     noNotifications: 'Silence. No news — which is news too.',
     backToProjects: '← all projects',
+    dangerZone: 'Danger zone',
+    deleteProject: 'Delete this project',
+    deleteProjectWarning:
+      'This permanently deletes the project along with its notes, ' +
+      'automations, and notifications. This cannot be undone.',
+    deleteConfirmPrompt: 'To confirm, type the project name below:',
+    deleteConfirmButton: 'I understand, delete this project',
+    deleting: 'Deleting…',
     notes: 'Notes',
     notePlaceholder: 'What must not be forgotten about this project…',
     add: 'Add',
@@ -95,6 +103,14 @@ const dict = {
     confirmClearNotifications: 'Видалити всі показані тут нотифікації?',
     noNotifications: 'Тиша. Жодних новин — і це теж новина.',
     backToProjects: '← до всіх проектів',
+    dangerZone: 'Небезпечна зона',
+    deleteProject: 'Видалити цей проект',
+    deleteProjectWarning:
+      'Проект буде видалено назавжди разом з нотатками, автоматизаціями ' +
+      'та нотифікаціями. Це не можна відмінити.',
+    deleteConfirmPrompt: 'Для підтвердження введи назву проекту нижче:',
+    deleteConfirmButton: 'Розумію, видалити цей проект',
+    deleting: 'Видаляю…',
     notes: 'Нотатки',
     notePlaceholder: 'Що не можна забути про цей проект…',
     add: 'Додати',

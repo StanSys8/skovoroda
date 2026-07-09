@@ -117,6 +117,8 @@ export const api = {
         method: 'PATCH',
         body: JSON.stringify(patch),
       }),
+    remove: (id: string) =>
+      http<{ deleted: boolean }>(`/api/projects/${id}`, { method: 'DELETE' }),
   },
   notes: {
     list: (projectId: string) =>
