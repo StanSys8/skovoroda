@@ -184,6 +184,8 @@ export const api = {
       }),
     run: (id: string) =>
       http<unknown>(`/api/automations/${id}/run`, { method: 'POST' }),
+    initUrl: (id: string) => `/api/automations/${id}/init`,
+    defaultInitUrl: '/api/agent/init',
   },
   sync: {
     run: () =>

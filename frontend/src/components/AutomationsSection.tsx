@@ -171,6 +171,25 @@ export default function AutomationsSection(props: {
             )}
           </div>
           <div className="automation-actions">
+            {a.persistent ? (
+              <a
+                className="init-dl"
+                href={api.automations.initUrl(a.id)}
+                download={`skovoroda-init-${a.id}.md`}
+                title={t('downloadInitTitle')}
+              >
+                {t('downloadInit')}
+              </a>
+            ) : (
+              <a
+                className="init-dl"
+                href={api.automations.defaultInitUrl}
+                download="skovoroda-init.md"
+                title={t('downloadDefaultInitTitle')}
+              >
+                {t('downloadDefaultInit')}
+              </a>
+            )}
             <button
               onClick={async () => {
                 await api.automations.run(a.id).catch(() => {});

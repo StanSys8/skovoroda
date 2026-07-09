@@ -1,9 +1,10 @@
 import {
-  Body, Controller, Get, HttpCode, Post, Query, Res,
+  Body, Controller, Get, Header, HttpCode, Post, Query, Res,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AgentService } from './agent.service';
 import { CreateCommandDto, ReportResultDto } from './agent.dto';
+import { buildInitMarkdown } from './agent-init';
 
 @Controller('agent')
 export class AgentController {
@@ -23,6 +24,13 @@ export class AgentController {
     const cmd = await this.service.takeNext(lane || 'main');
     if (!cmd) return res.status(204).send();
     return res.status(200).json(cmd);
+  }
+
+  /** Default init.md (main lane) for a plain agent session. */
+  @Get('init')
+  @Header('Content-Type', 'text/markdown; charset=utf-8')
+  init(@Query('lane') lane?: string) {
+    return buildInitMarkdown({ lane: lane || 'main' });
   }
 
   /** Agent's execution report. */

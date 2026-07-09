@@ -1,8 +1,11 @@
 import {
-  Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query,
+  Body, Controller, Delete, Get, Header, Param, ParseUUIDPipe, Patch, Post,
+  Query,
 } from '@nestjs/common';
 import { AutomationsService } from './automations.service';
 import { CreateAutomationDto, UpdateAutomationDto } from './automation.dto';
+import { buildInitMarkdown } from '../agent/agent-init';
+import { instanceLane } from './instance-command';
 
 @Controller('automations')
 export class AutomationsController {
@@ -35,5 +38,19 @@ export class AutomationsController {
   @Post(':id/run')
   run(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.run(id);
+  }
+
+  /** Ready-to-run init.md for this routine's session (lane baked in). */
+  @Get(':id/init')
+  @Header('Content-Type', 'text/markdown; charset=utf-8')
+  async init(@Param('id', ParseUUIDPipe) id: string) {
+    const inst = await this.service.findOne(id);
+    return buildInitMarkdown({
+      lane: instanceLane(inst),
+      routine: {
+        name: inst.name || 'Automation',
+        instructionUrl: String(inst.config?.['instructionUrl'] ?? ''),
+      },
+    });
   }
 }

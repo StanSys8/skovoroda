@@ -654,6 +654,20 @@ a:hover { text-decoration: underline; }
   font-size: 12px;
 }
 .automation-actions button:hover { border-color: var(--accent); color: var(--accent); }
+.automation-actions .init-dl {
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.automation-actions .init-dl:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
 
 .note-edit {
   background: transparent;
