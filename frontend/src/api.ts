@@ -57,10 +57,19 @@ export interface AppNotification {
   createdAt: string;
 }
 
+// Shared secret baked in at build time (VITE_API_KEY). Sent on every
+// request so the backend guard accepts us; a cross-origin page cannot read
+// this bundle, so it cannot forge the header. Empty in unauthenticated dev.
+const API_KEY = (import.meta.env.VITE_API_KEY as string | undefined) ?? '';
+
+function authHeaders(): Record<string, string> {
+  return API_KEY ? { 'X-API-Key': API_KEY } : {};
+}
+
 async function http<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
     ...init,
+    headers: { 'Content-Type': 'application/json', ...authHeaders(), ...init?.headers },
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
@@ -75,6 +84,23 @@ async function http<T>(url: string, init?: RequestInit): Promise<T> {
     throw new Error(message);
   }
   return res.json() as Promise<T>;
+}
+
+// Downloads must carry the API key too, so we fetch with headers and save
+// a blob — a plain <a download> navigation cannot set request headers and
+// would be rejected by the guard.
+export async function downloadFile(url: string, filename: string) {
+  const res = await fetch(url, { headers: authHeaders() });
+  if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
+  const blob = await res.blob();
+  const href = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(href);
 }
 
 export const api = {

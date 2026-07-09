@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { api, Automation, RiskLevel } from '../api';
+import { api, Automation, downloadFile, RiskLevel } from '../api';
 import { useT } from '../i18n';
 
 export default function AutomationsSection(props: {
@@ -102,13 +102,18 @@ export default function AutomationsSection(props: {
               {file ? file.name : t('instructionFile')}
             </span>
           </label>
-          <a
+          <button
+            type="button"
             className="template-link"
-            href={api.instructions.templateUrl}
-            download="skovoroda-instruction-template.md"
+            onClick={() =>
+              downloadFile(
+                api.instructions.templateUrl,
+                'skovoroda-instruction-template.md',
+              )
+            }
           >
             {t('downloadTemplate')}
-          </a>
+          </button>
         </div>
         <div className="automation-form-row">
           <select
@@ -197,23 +202,33 @@ export default function AutomationsSection(props: {
           </div>
           <div className="automation-actions">
             {a.persistent ? (
-              <a
+              <button
+                type="button"
                 className="init-dl"
-                href={api.automations.initUrl(a.id)}
-                download={`skovoroda-init-${a.id}.md`}
+                onClick={() =>
+                  downloadFile(
+                    api.automations.initUrl(a.id),
+                    `skovoroda-init-${a.id}.md`,
+                  )
+                }
                 title={t('downloadInitTitle')}
               >
                 {t('downloadInit')}
-              </a>
+              </button>
             ) : (
-              <a
+              <button
+                type="button"
                 className="init-dl"
-                href={api.automations.defaultInitUrl}
-                download="skovoroda-init.md"
+                onClick={() =>
+                  downloadFile(
+                    api.automations.defaultInitUrl,
+                    'skovoroda-init.md',
+                  )
+                }
                 title={t('downloadDefaultInitTitle')}
               >
                 {t('downloadDefaultInit')}
-              </a>
+              </button>
             )}
             <button
               onClick={async () => {

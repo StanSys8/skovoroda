@@ -20,6 +20,11 @@ export function buildInitMarkdown(opts: {
   const { lane, routine } = opts;
   const intervalMinutes = opts.intervalMinutes ?? 0;
   const origin = AGENT_API_BASE.replace(/\/api\/?$/, '');
+  const apiKey = process.env.API_KEY ?? '';
+  const keyLine = apiKey
+    ? `KEY="${apiKey}"                    # API key required by this instance\n`
+    : '';
+  const authHeader = apiKey ? ' -H "X-API-Key: $KEY"' : '';
 
   const header = routine
     ? `# Skovoroda executor agent — «${routine.name}»
@@ -59,11 +64,11 @@ when a command arrives or the time budget runs out.
 
 \`\`\`bash
 API="${AGENT_API_BASE}"
-LANE="${lane}"                      # baked in for this session
+${keyLine}LANE="${lane}"                      # baked in for this session
 DEADLINE=$(( $(date +%s) + 540 ))   # ~9 min, under the bash tool call limit
 
 while [ "$(date +%s)" -lt "$DEADLINE" ]; do
-  BODY=$(curl -s -w '\\n%{http_code}' --max-time 15 "$API/agent/poll?lane=$LANE")
+  BODY=$(curl -s -w '\\n%{http_code}' --max-time 15${authHeader} "$API/agent/poll?lane=$LANE")
   CODE=$(echo "$BODY" | tail -n1)
   JSON=$(echo "$BODY" | sed '$d')
 
@@ -89,7 +94,7 @@ exit 0
 
 Read the md instruction at \`instructionUrl\`:
 
-- starts with \`/api/\` — served by Skovoroda: \`curl -s "${origin}<instructionUrl>"\`;
+- starts with \`/api/\` — served by Skovoroda: \`curl -s${authHeader} "${origin}<instructionUrl>"\`;
 - a local file path — via cat;
 - a full URL — via curl.
 
@@ -107,7 +112,7 @@ The \`payload\` field carries configuration parameters for the instruction.
 
 \`\`\`bash
 curl -s -X POST "$API/agent/result" \\
-  -H "Content-Type: application/json" \\
+  -H "Content-Type: application/json"${authHeader} \\
   -d '{
     "commandId": "<command id>",
     "status": "done",

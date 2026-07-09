@@ -560,10 +560,16 @@ a:hover { text-decoration: underline; }
   white-space: nowrap;
 }
 .automation-form .template-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
   font-size: 13px;
   white-space: nowrap;
   align-self: center;
+  cursor: pointer;
 }
+.automation-form .template-link:hover { text-decoration: underline; }
 .automation-form .form-error {
   color: var(--error);
   font-size: 13px;

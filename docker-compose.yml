@@ -4,7 +4,7 @@ services:
     container_name: skovoroda-db
     environment:
       POSTGRES_USER: ${DB_USER:-skovoroda}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-skovoroda}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
       POSTGRES_DB: ${DB_NAME:-skovoroda}
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -23,9 +23,13 @@ services:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: ${DB_USER:-skovoroda}
-      DB_PASSWORD: ${DB_PASSWORD:-skovoroda}
+      DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
       DB_NAME: ${DB_NAME:-skovoroda}
       PORT: 3900
+      # Empty API_KEY = auth disabled (local dev). Set it in .env to require
+      # a key on every /api request.
+      API_KEY: ${API_KEY:-}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
     depends_on:
       db:
         condition: service_healthy
@@ -33,7 +37,11 @@ services:
       - "${BIND_HOST:-127.0.0.1}:${API_PORT:-3900}:3900"
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        # Baked into the bundle; must match the backend API_KEY.
+        VITE_API_KEY: ${API_KEY:-}
     container_name: skovoroda-frontend
     depends_on:
       - backend
