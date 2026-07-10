@@ -168,6 +168,7 @@ cd frontend && npm install && npm run dev          # http://localhost:5173 (пр
 | POST | /api/automations/:id/run | запустити зараз (перезапускає постійну) |
 | GET | /api/automations/:id/init | готовий init.md для сесії рутини (lane вшито) |
 | POST | /api/instructions | завантажити md-інструкцію ({filename, content}) |
+| POST | /api/instructions/prune | видалити інструкції, на які не посилається жодна рутина |
 | GET | /api/instructions/template | шаблон інструкції |
 | GET | /api/instructions/:id | сирий markdown інструкції |
 | GET | /api/agent/init[?lane=] | дефолтний init.md (lane main) |
@@ -384,6 +385,7 @@ same value for Vite.
 | POST | /api/automations/:id/run | run now (restarts a persistent one) |
 | GET | /api/automations/:id/init | ready-to-run init.md for the routine (lane baked in) |
 | POST | /api/instructions | upload an md instruction ({filename, content}) |
+| POST | /api/instructions/prune | delete instructions no routine references |
 | GET | /api/instructions/template | instruction template |
 | GET | /api/instructions/:id | raw instruction markdown |
 | GET | /api/agent/init[?lane=] | default init.md (main lane) |

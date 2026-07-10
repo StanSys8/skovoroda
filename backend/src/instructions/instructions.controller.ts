@@ -15,6 +15,12 @@ export class InstructionsController {
     return this.service.create(dto);
   }
 
+  /** Delete instructions no routine references any more. */
+  @Post('prune')
+  prune() {
+    return this.service.pruneUnused();
+  }
+
   /** Instruction template with the mandatory sections. */
   @Get('template')
   @Header('Content-Type', 'text/markdown; charset=utf-8')

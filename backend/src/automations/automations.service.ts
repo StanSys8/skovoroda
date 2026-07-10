@@ -7,6 +7,7 @@ import { AutomationInstance } from './automation-instance.entity';
 import { CreateAutomationDto, UpdateAutomationDto } from './automation.dto';
 import { AgentService } from '../agent/agent.service';
 import { commandFromInstance } from './instance-command';
+import { InstructionsService } from '../instructions/instructions.service';
 
 @Injectable()
 export class AutomationsService {
@@ -14,6 +15,7 @@ export class AutomationsService {
     @InjectRepository(AutomationInstance)
     private repo: Repository<AutomationInstance>,
     private agent: AgentService,
+    private instructions: InstructionsService,
   ) {}
 
   list(projectId?: string) {
@@ -107,6 +109,8 @@ export class AutomationsService {
     const inst = await this.findOne(id);
     await this.agent.dropPendingForInstance(inst.id);
     await this.repo.remove(inst);
+    // Drop the routine's uploaded instruction if nothing else uses it.
+    await this.instructions.pruneUnused();
     return { deleted: true };
   }
 
