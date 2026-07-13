@@ -14,6 +14,23 @@ export default function Dashboard(props: {
   const t = useT();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [pruneMsg, setPruneMsg] = useState<string | null>(null);
+  const [pruning, setPruning] = useState(false);
+
+  const pruneInstructions = async () => {
+    if (pruning) return;
+    setPruning(true);
+    try {
+      const { deleted } = await api.instructions.prune();
+      setPruneMsg(
+        deleted > 0
+          ? t('prunedSome').replace('{n}', String(deleted))
+          : t('prunedNone'),
+      );
+    } finally {
+      setPruning(false);
+    }
+  };
 
   const statusLabel: Record<Project['status'], string> = {
     active: t('statusActive'),
@@ -103,6 +120,17 @@ export default function Dashboard(props: {
         </button>
       </div>
       <NotificationsFeed refreshKey={refreshKey} onChanged={onChanged} />
+
+      <div className="maintenance">
+        <button
+          className="link-btn"
+          onClick={pruneInstructions}
+          disabled={pruning}
+        >
+          🧹 {t('pruneInstructions')}
+        </button>
+        {pruneMsg && <span className="maintenance-msg">{pruneMsg}</span>}
+      </div>
     </>
   );
 }

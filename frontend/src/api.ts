@@ -175,6 +175,8 @@ export const api = {
         { method: 'POST', body: JSON.stringify({ filename, content }) },
       ),
     templateUrl: '/api/instructions/template',
+    prune: () =>
+      http<{ deleted: number }>('/api/instructions/prune', { method: 'POST' }),
   },
   automations: {
     list: (projectId: string) =>

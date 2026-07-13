@@ -251,6 +251,17 @@ a:hover { text-decoration: underline; }
   box-shadow: 0 0 18px 1px rgba(224, 164, 88, 0.35);
 }
 
+/* ---------- Dashboard maintenance row ---------- */
+.maintenance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.maintenance-msg { font-size: 13px; color: var(--muted); }
+
 /* ---------- Danger zone & delete modal ---------- */
 .section-title.danger-title { color: var(--error); }
 .danger-zone {
