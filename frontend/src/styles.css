@@ -808,3 +808,38 @@ a:hover { text-decoration: underline; }
   padding: 10px 14px;
   margin-bottom: 16px;
 }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 640px) {
+  .app { padding: 0 14px 48px; }
+
+  /* Header: let controls wrap, shrink the signature button. */
+  .header-actions { flex-wrap: wrap; justify-content: flex-end; row-gap: 10px; }
+  .sync-btn { padding: 9px 16px; font-size: 14px; }
+
+  /* Section titles: buttons drop below the rule instead of squeezing it. */
+  .section-title { flex-wrap: wrap; }
+
+  /* Automation card: stack so the filename/URL gets full width and the
+     action buttons wrap below instead of overflowing the card. */
+  .automation { flex-direction: column; align-items: stretch; }
+  .automation-actions { flex-wrap: wrap; }
+  .automation-meta { flex-wrap: wrap; }
+  .automation-meta code,
+  .automation-lane code { overflow-wrap: anywhere; }
+
+  /* Automation form: full-width controls, no auto-pushed button. */
+  .automation-form-row .grow { min-width: 100%; }
+  .automation-form button { margin-left: 0; }
+  .automation-form .template-link { align-self: flex-start; }
+
+  /* Notifications: title/body take the full width, meta wraps beneath. */
+  .notif { flex-wrap: wrap; align-items: flex-start; }
+  .notif .dot { display: none; }
+  .notif-body { flex: 1 1 100%; }
+  .notif time { order: 2; margin-right: auto; }
+  .notif button, .notif-delete { order: 3; }
+
+  /* Danger zone: button below the warning, full width. */
+  .danger-zone { flex-direction: column; align-items: stretch; }
+}
