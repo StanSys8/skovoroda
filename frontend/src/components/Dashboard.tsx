@@ -127,7 +127,7 @@ export default function Dashboard(props: {
           onClick={pruneInstructions}
           disabled={pruning}
         >
-          🧹 {t('pruneInstructions')}
+          {t('pruneInstructions')}
         </button>
         {pruneMsg && <span className="maintenance-msg">{pruneMsg}</span>}
       </div>
